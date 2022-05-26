@@ -1,9 +1,17 @@
 import processing.core.PApplet;
-import processing.core.PIMage;
+import processing.core.PImage;
 
 public class Sketch extends PApplet {
 
   PImage img;
+
+  int intBowlX = width/2;
+
+  int intBowlSpeed = 10;
+
+  boolean boolBowlLeft = false;
+  boolean boolBowlRight = false;
+
 	
 	
   /**
@@ -11,7 +19,7 @@ public class Sketch extends PApplet {
    */
   public void settings() {
 	// put your size call here
-    size(400, 400);
+    size(1280, 720);
   }
 
   /** 
@@ -19,18 +27,45 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    background(210, 255, 173);
-    img = loadImage()
+    
+    img = loadImage("fruit-catcher-idle.png");
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    background(0,0,0);
+    image(img, intBowlX, height - 50);
+    
+    if (boolBowlLeft){
+      intBowlX -= 100;
+    }
+    if (boolBowlRight){
+      intBowlX += 100;
+    }
+
 	  
 	// sample code, delete this stuff
 
   }
   
   // define other methods down here.
+  public void keyPressed() {
+    if (keyCode == 'a'){
+      boolBowlLeft = true;
+    }
+    if (keyCode == 'd'){
+      boolBowlRight = true;
+    }
+  }
+  public void keyReleased() {
+    if (keyCode == 'a'){
+      boolBowlLeft = false;
+    }
+    if (keyCode == 'd'){
+      boolBowlRight = false;
+    }
+  }
+
 }
