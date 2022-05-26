@@ -35,15 +35,17 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+
     background(0,0,0);
     image(img, intBowlX, height - 50);
-    
-    if (boolBowlLeft){
-      intBowlX -= 100;
+
+    if (boolBowlLeft) {
+      intBowlX -= 10;
     }
     if (boolBowlRight){
-      intBowlX += 100;
+      intBowlX += 10;
     }
+
 
 	  
 	// sample code, delete this stuff
@@ -52,18 +54,23 @@ public class Sketch extends PApplet {
   
   // define other methods down here.
   public void keyPressed() {
-    if (keyCode == 'a'){
+    System.out.println("keypressed");
+
+    if (key == 'a'){
       boolBowlLeft = true;
+      System.out.println("a");
     }
-    if (keyCode == 'd'){
+    if (key == 'd'){
       boolBowlRight = true;
+      System.out.println("d");
+
     }
   }
   public void keyReleased() {
-    if (keyCode == 'a'){
+    if (key == 'a'){
       boolBowlLeft = false;
     }
-    if (keyCode == 'd'){
+    if (key == 'd'){
       boolBowlRight = false;
     }
   }
