@@ -1,19 +1,46 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import java.util.ArrayList;
+
+ class fruits {
+  int x;
+  int y;
+  boolean shown;
+
+  public int getX(){
+    return x;
+  }
+  public void setX(int x){
+    this.x = x;
+  }
+  public int getY(){
+    return y;
+  }
+  public void setY(int y){
+    this.y = y;
+  }
+  public boolean getShown(){
+    return shown;
+  }
+  public void setShown (boolean shown){
+    this.shown = shown;
+  }
+}
 
 public class Sketch extends PApplet {
+  
 
   PImage img;
 
   int intBowlX = width/2;
-
   int intBowlSpeed = 10;
 
   boolean boolBowlLeft = false;
   boolean boolBowlRight = false;
+  boolean boolBowlSpeedUp = false;
 
-	
-	
+  ArrayList<fruits> fruitslist = new ArrayList<fruits>();
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -39,16 +66,26 @@ public class Sketch extends PApplet {
     background(0,0,0);
     image(img, intBowlX, height - 50);
 
+    if (boolBowlSpeedUp){
+      intBowlSpeed = 25;
+    }
+    else{
+      intBowlSpeed = 10;
+    }
     if (boolBowlLeft) {
-      intBowlX -= 10;
+      intBowlX -= intBowlSpeed;
     }
     if (boolBowlRight){
-      intBowlX += 10;
+      intBowlX += intBowlSpeed;
     }
 
 
 	  
 	// sample code, delete this stuff
+  
+
+  }
+  public void drops(){
 
   }
   
@@ -63,7 +100,9 @@ public class Sketch extends PApplet {
     if (key == 'd'){
       boolBowlRight = true;
       System.out.println("d");
-
+    }
+    if (key == ' '){
+      boolBowlSpeedUp = true;
     }
   }
   public void keyReleased() {
@@ -73,6 +112,8 @@ public class Sketch extends PApplet {
     if (key == 'd'){
       boolBowlRight = false;
     }
+    if (key == ' '){
+      boolBowlSpeedUp = false;
+    }
   }
-
 }
