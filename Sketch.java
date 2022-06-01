@@ -1,8 +1,7 @@
 import processing.core.PApplet;
 
 import processing.core.PImage;
-import processing.sound.*;
-SoundFile file;
+
 
 public class Sketch extends PApplet {
   
