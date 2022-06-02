@@ -1,4 +1,7 @@
 import processing.core.PApplet;
+import ddf.minim.*;
+
+
 /**
  * Main class to execute sketch
  * @author 

@@ -1,14 +1,19 @@
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import ddf.minim.*;
 
 
-Minim m;
 
 
 public class Sketch extends PApplet {
   
   PImage img;
+  Minim audio;
+  AudioPlayer player;
+
+
+
 
   int intBowlX = width/2;
   int intBowlSpeed = 10;
@@ -39,6 +44,7 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    audio = new Minim(this);
     frameRate(60);
     for (int x = 0; x < dropShown.length; x++){
       dropShown[x] = false;
@@ -48,6 +54,9 @@ public class Sketch extends PApplet {
 
     }
     img = loadImage("fruit-catcher-idle.png");
+
+    player = audio.loadFile("audio.mp3");
+    player.play();
     //file = new SoundFile(this, "audio.mp3");
     //file.play();
   }
