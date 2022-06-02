@@ -7,12 +7,10 @@ public class Sketch extends PApplet {
   
   PImage img;
   Minim audio;
-  Minim audio2;
   AudioPlayer player;
   AudioSample jack;
 
   float songPosition;
-  float songPosInBeats;
 
   int intBowlX = width/2;
   int intBowlSpeed = 10;
@@ -30,10 +28,10 @@ public class Sketch extends PApplet {
   
   int combo = 0; 
 
-
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
+
   public void settings() {
 	// put your size call here
     size(1280, 720);
@@ -43,54 +41,56 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution.  Add initial set up
    * values here i.e background, stroke, fill etc.
    */
+
   public void setup() {
     audio = new Minim(this);
-    audio2 = new Minim(this);
+    audio = new Minim(this);
     frameRate(60);
     for (int x = 0; x < dropShown.length; x++){
       dropShown[x] = false;
       dropObjectsY[x] = 0;
       dropPlayed[x] = false;
     }
-    
 
     img = loadImage("fruit-catcher-idle.png");
-
     player = audio.loadFile("audio.mp3");
     player.play();
-    jack = audio2.loadSample("soft-hitnormal2.wav");
-    //file = new SoundFile(this, "audio.mp3");
-    //file.play();
+    jack = audio.loadSample("soft-hitnormal2.wav");
+    
   }
+  
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
+
   public void draw() {
-    int time = millis();
+    songPosition = player.position();
     
     background(0,0,0);
     image(img, intBowlX, height - 50);
-    //System.out.println(combo )
+    //System.out.println(combo)
 
     if (boolBowlSpeedUp){
       intBowlSpeed = 25;
     }
-    else{
+    else {
       intBowlSpeed = 10;
     }
+
     if (boolBowlLeft) {
       intBowlX -= intBowlSpeed;
     }
+
     if (boolBowlRight){
       intBowlX += intBowlSpeed;
     }
+
     fill(255,255,255);
 
     for (int i = 0; i < dropObjectsX.length; i++){
-      if (time >= (dropTiming[i]) && time <= (dropTiming[i] + 750)){
+      if (songPosition >= (dropTiming[i]) && songPosition <= (dropTiming[i] + 750)){
         dropShown[i] = true;
-
       }
       if (dropShown[i]){
         ellipse(dropObjectsX[i] * 2, dropObjectsY[i] , 60, 60);
@@ -106,20 +106,12 @@ public class Sketch extends PApplet {
         }
         // Remeber about where the y value is
       }
-      
     }
   }
-    
-
-
 	  
-	// sample code, delete this stuff
   
   
-  public void drops(){
-    
-  }
-  // define other methods down here.
+
   public void keyPressed() {
 
     if (key == 'a'){
@@ -132,6 +124,7 @@ public class Sketch extends PApplet {
       boolBowlSpeedUp = true;
     }
   }
+
   public void keyReleased() {
     if (key == 'a'){
       boolBowlLeft = false;

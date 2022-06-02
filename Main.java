@@ -1,5 +1,4 @@
 import processing.core.PApplet;
-import ddf.minim.*;
 
 
 /**
