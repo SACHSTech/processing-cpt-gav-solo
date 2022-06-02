@@ -56,9 +56,8 @@ public class Sketch extends PApplet {
     player = audio.loadFile("audio.mp3");
     player.play();
     jack = audio.loadSample("soft-hitnormal2.wav");
-    
+
   }
-  
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
@@ -104,7 +103,6 @@ public class Sketch extends PApplet {
 
           combo += 1;
         }
-        // Remeber about where the y value is
       }
     }
   }
