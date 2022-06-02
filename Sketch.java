@@ -1,6 +1,9 @@
 import processing.core.PApplet;
-
 import processing.core.PImage;
+import ddf.minim.*;
+
+
+Minim m;
 
 
 public class Sketch extends PApplet {
