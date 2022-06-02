@@ -88,7 +88,7 @@ public class Sketch extends PApplet {
     fill(255,255,255);
 
     for (int i = 0; i < dropObjectsX.length; i++){
-      if (songPosition >= (dropTiming[i]) && songPosition <= (dropTiming[i] + 750)){
+      if (songPosition >= (dropTiming[i] - 680) && songPosition <= (dropTiming[i])){
         dropShown[i] = true;
       }
       if (dropShown[i]){
