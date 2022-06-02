@@ -4,16 +4,13 @@ import processing.core.PImage;
 import ddf.minim.*;
 
 
-
-
 public class Sketch extends PApplet {
   
   PImage img;
   Minim audio;
+  Minim audio2;
   AudioPlayer player;
-
-
-
+  AudioPlayer jack;
 
   int intBowlX = width/2;
   int intBowlSpeed = 10;
@@ -45,6 +42,7 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     audio = new Minim(this);
+    audio2 = new Minim(this);
     frameRate(60);
     for (int x = 0; x < dropShown.length; x++){
       dropShown[x] = false;
@@ -57,6 +55,7 @@ public class Sketch extends PApplet {
 
     player = audio.loadFile("audio.mp3");
     player.play();
+    jack = audio2.loadFile("soft-hitnormal2.wav");
     //file = new SoundFile(this, "audio.mp3");
     //file.play();
   }
@@ -66,7 +65,7 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     int time = millis();
-
+    
     background(0,0,0);
     image(img, intBowlX, height - 50);
 
@@ -86,15 +85,17 @@ public class Sketch extends PApplet {
     fill(255,255,255);
 
     for (int i = 0; i < dropObjectsX.length; i++){
-      if (time >= (dropTiming[i])){
+      if (time >= (dropTiming[i] )){
         dropShown[i] = true;
       }
       if (dropShown[i]){
         ellipse(dropObjectsX[i] * 2, dropObjectsY[i] , 60, 60);
         dropObjectsY[i] += 15.111111111111;
       }
-      if (dropObjectsY[i] >= 670 && dropObjectsX[i] >= intBowlX){
-        dropShown[i] = false;
+      if (dropObjectsY[i] >= 670 && dropObjectsY[i] <= 740 && dropObjectsX[i] >= intBowlX){
+        // Remeber about where the y value is
+        jack = audio2.loadFile("soft-hitnormal2.wav");
+        jack.play();
       }
     }
   }
