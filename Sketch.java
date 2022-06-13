@@ -10,6 +10,11 @@ public class Sketch extends PApplet {
   // PImage variable
   PImage img;
   PImage backgroundThree;
+  PImage rankS;
+  PImage rankA;
+  PImage rankB;
+  PImage rankC;
+  PImage rankD;
 
   // Audio Varabiles
   Minim audio;
@@ -69,13 +74,16 @@ public class Sketch extends PApplet {
   double notesTotal;
   
   // Program state varaibles
-  boolean menu = true;
+  boolean menu = false;
   boolean songOne = false;
   boolean songTwo = false;
   boolean songThree = false;
-  boolean resultScreen = false; 
-
-
+  boolean resultScreen = true;;
+   
+  boolean resultOne = false;
+  boolean resultTwo = false;
+  boolean resultThree = false;
+  boolean scoreCount = false;
   /**
    * 
    */
@@ -94,9 +102,6 @@ public class Sketch extends PApplet {
     gameFont = createFont("Crispy Duck.ttf", 32);
     textFont(gameFont);
     textAlign(CENTER, CENTER);
-
-
-    
     // Initiate Audio
     audio = new Minim(this);
     
@@ -117,6 +122,15 @@ public class Sketch extends PApplet {
     // Load songs and images
     img = loadImage("fruit-catcher-idle.png");
     backgroundThree = loadImage("songThree.png");
+    rankS = loadImage("ranking-s.png");
+    rankA = loadImage("ranking-a.png");
+    rankB = loadImage("ranking-b.png");
+    rankC = loadImage("ranking-c.png");
+    rankS.resize(300,364);
+    rankA.resize(300,364);
+    rankB.resize(300,364);
+    rankC.resize(300,364);
+
 
     // load Songs
     player = audio.loadFile("audio.mp3");
@@ -141,23 +155,33 @@ public class Sketch extends PApplet {
       player.play();
       menu = false;
       songOne();
-      scoring();
       bowl();
     }
     if (songTwo == true){
       playerTwo.play();
       menu = false;
       songTwo();
-      scoring();
       bowl();
     }
+    
     if (songThree == true){
       playerThree.play();
       menu = false;
       songThree();
-      scoring();
       bowl();
-      
+    }
+    if (resultOne == true || resultTwo == true || resultThree == true || resultScreen == true){
+      Results();
+    }
+
+    if (songOne == true || songTwo == true || songThree == true){
+      scoreCount = true;
+    }
+    else {
+      scoreCount = false;
+    }
+    if (scoreCount){
+      scoring();
     }
     fill(255,255,255);
   }
@@ -167,6 +191,44 @@ public class Sketch extends PApplet {
     rect(500, 300, 300, 50);
     rect(500, 450, 300, 50);
     rect(500, 600, 300, 50);
+
+  }
+  public void Results(){
+    resultScreen = true;
+
+    fill(0,0,0);
+    rect(400, 0, 480, 720);
+    textSize(100);
+    fill(255,255,255);
+    
+    text(score, 650, 350);
+
+    textSize(50);
+    if (resultOne){
+      text("Made in Love", 650, 450);
+    }
+    else if (resultTwo){
+      text("Renatus", 650, 450);
+    }
+    else if (resultThree){
+      text("Everything will Freeze", 650, 450);
+    }
+
+    text(intAccuracy + "%", 650, 500);
+
+    if (accuracy >= 95){
+      image(rankS, 500, -40);
+    }
+    else if (accuracy >= 90){
+      image(rankA, 490, -40);
+    }
+    else if (accuracy >= 85){
+      image(rankB, 500, -40);
+    }
+    else if (accuracy >= 80){
+      image(rankC, 500, -40);
+    }
+    rect(540, 640, 200, 50);
   }
 
   public void bowl() {
@@ -220,9 +282,7 @@ public class Sketch extends PApplet {
         }
         else{
           jack.trigger();
-
-        }
-        
+        } 
         combo += 1;
         score += 300 * (1 + combo * 0.01);
         notesCaught ++;
@@ -233,6 +293,11 @@ public class Sketch extends PApplet {
         notesMissed ++;
       }
     }
+    if (notesTotal == dropObjectsXandYandTime[0].length){
+      resultOne = true;
+      songOne = false;
+    }
+    
     
 
   }
@@ -264,6 +329,10 @@ public class Sketch extends PApplet {
         notesMissed ++;
       }
     }
+    if (notesTotal == noteValuesTwo[0].length){
+      resultTwo = true;
+      songTwo = false;
+    }
    
   }
   public void songThree() {
@@ -287,8 +356,6 @@ public class Sketch extends PApplet {
         noteShownThree[i] = false;
         
         drum.trigger();
-
-        
         combo += 1;
         score += 300 * (1 + combo * 0.01);
         notesCaught ++;
@@ -298,11 +365,12 @@ public class Sketch extends PApplet {
         notesMissed ++;
       }
     }
-  
+    if (notesTotal == noteValuesThree[0].length){
+      songThree = false;
+      resultThree = true;
+      
+    }
   }
-
-
-  
   public void mousePressed(){
     if (mouseX > 500 && mouseX < 800 && mouseY > 300 && mouseY < 350 && menu == true){
       songOne = true;
@@ -313,8 +381,17 @@ public class Sketch extends PApplet {
     if (mouseX > 500 && mouseX < 800 && mouseY > 600 && mouseY < 650 && menu == true){
       songThree = true;
     }
+    if (mouseX > 540 && mouseX < 740 && mouseY > 640 && mouseX < 690 && resultScreen ){
+      resultScreen = false;
+      resultOne = false;
+      resultTwo = false;
+      resultThree = false;
+      menu = true;
+      intAccuracy = 0;
+      accuracy = 0;
+      score = 0;
+    }
   }
-
   public void keyPressed() {
     if (key == 'a'){
       boolBowlLeft = true;
@@ -326,7 +403,6 @@ public class Sketch extends PApplet {
       boolBowlSpeedUp = true;
     }
   }
-
   public void keyReleased() {
     if (key == 'a'){
       boolBowlLeft = false;
