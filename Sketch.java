@@ -298,8 +298,6 @@ public class Sketch extends PApplet {
       songOne = false;
     }
     
-    
-
   }
   public void songTwo() {
 
@@ -390,6 +388,10 @@ public class Sketch extends PApplet {
       intAccuracy = 0;
       accuracy = 0;
       score = 0;
+      notesCaught = 0;
+      notesMissed = 0;
+      notesTotal = 0;
+      combo = 0;
     }
   }
   public void keyPressed() {
