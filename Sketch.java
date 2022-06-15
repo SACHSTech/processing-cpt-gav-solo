@@ -25,12 +25,12 @@ public class Sketch extends PApplet {
 
   // Audio Varabiles
   Minim audio;
-  Minim minim;
   AudioPlayer songAudioOne;
   AudioPlayer songAudioTwo;
   AudioPlayer songAudioThree;
   AudioSample jack;
   AudioSample symbal;
+  AudioSample missSound;
   AudioPlayer applause;
   AudioPlayer intro;
 
@@ -94,7 +94,6 @@ public class Sketch extends PApplet {
   boolean boolResultThree = false;
   boolean boolScoreCounting = false;
   boolean boolPaused = false;
-
   boolean boolSongValuesTransfer;
   
   /**
@@ -126,23 +125,15 @@ public class Sketch extends PApplet {
     frameRate(60);
 
     // Intialize Arrays for song values
-    for (int x = 0; x < noteShownOne.length; x++){
-      noteShownOne[x] = false;
-    }
-    for (int j = 0; j < noteShownTwo.length; j++ ){
-      noteShownTwo[j] = false;
-    }
-    for (int a = 0; a < noteShownThree.length; a++){
-      noteShownThree[a] = false;
-    }
+    
     for (int x = 0; x < noteValuesOne[0].length; x++){
-      noteValuesOne[0][x] = (int)(noteValuesOne[0][x] * (float)1.75 + 100);
+      noteValuesOne[0][x] = (int)(noteValuesOne[0][x] * 1.75 + 100);
     }
     for (int x = 0; x < noteValuesTwo[0].length; x++){
-      noteValuesTwo[0][x] = (int)(noteValuesTwo[0][x] * (float)1.75 + 100);
+      noteValuesTwo[0][x] = (int)(noteValuesTwo[0][x] * 1.75 + 100);
     }
     for (int x = 0; x < noteValuesThree[0].length; x++){
-      noteValuesThree[0][x] = (int)(noteValuesThree[0][x] * (float)1.75 + 100);
+      noteValuesThree[0][x] = (int)(noteValuesThree[0][x] * 1.75 + 100);
     }
 
     // Load images
@@ -165,7 +156,7 @@ public class Sketch extends PApplet {
     rankC.resize(300,364);
     backgroundOne.resize(1280,720);
     menuBackground.resize(1280,720);
-    bowl.resize(300,300);
+    bowl.resize(260,300);
 
     // load Songs
     songAudioOne = audio.loadFile("audio.mp3");
@@ -175,7 +166,7 @@ public class Sketch extends PApplet {
     jack = audio.loadSample("soft-hitnormal2.wav");
     symbal = audio.loadSample("drum-hitwhistle.wav");
     intro = audio.loadFile("introSong.mp3");
-    
+    missSound = audio.loadSample("missSound.wav");
   }
 
   /**
@@ -275,14 +266,15 @@ public class Sketch extends PApplet {
     image(button, 440, 400);
     image(button, 440, 530);
     textSize(30);
-    text("Made in Love - Easy", 640,300);
-    text("Renatus - Medium", 640,430);
-    text("Everything Will Freeze - Hard", 640,560);
+    text("Made in Love - Easy", 640, 300);
+    text("Renatus - Medium", 640, 430);
+    text("Everything Will Freeze - Hard", 640, 560);
   }
 
   /**
    * Result screen after the player is finished with the song level, outputs the score, rank, and accuracy
    */
+
   public void Results(){
     
     // Play Applause
@@ -295,7 +287,9 @@ public class Sketch extends PApplet {
     // Draw Score
     textSize(100);
     fill(255,255,255);
-    
+    if(fltAccuracy == 100){
+      intScore = 1000000;
+    }
     text(intScore, 650, 350);
 
 
@@ -328,8 +322,8 @@ public class Sketch extends PApplet {
     else {
       image(rankC, 500, -40);
     }
-    
-    // Button to return to menu
+
+    // Draw button to return to menu
     button.resize(300, 80);
     textSize(30);
     image(button, 485, 600 );
@@ -389,8 +383,9 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * Method which controls the pause menu
+   * Method which controls the pause menu, allowing the user to pause the game, and resume, retry or go back to the menu
    */
+
   public void pause() {
     
     // pause all songs
@@ -441,11 +436,10 @@ public class Sketch extends PApplet {
     // Draw Combo Counter
     fill(255, 255,255);
     textSize(40);
-    text(intCombo, intBowlX + 115, 630);
+    text(intCombo, intBowlX + 130, 630);
     
-    // Draw SCore Counter
+    // Draw Score Counter
     text("Score: " + intScore, 1150, 25);
-
     fltNotesTotal = fltNotesCaught + fltNotesMissed;
     
     // Draw Accuracy Counter
@@ -457,7 +451,6 @@ public class Sketch extends PApplet {
   /**
    * A method which plays and controls the first song level drawing the background, dropping the notes on beat, and 
    * calculating health and accuracy
-   * 
    */
 
   public void boolSongOne() {
@@ -470,9 +463,6 @@ public class Sketch extends PApplet {
       songAudioOne.play();
     }
    
-
-    
-
     // Evaluate Current Position
     songPosition = songAudioOne.position();
 
@@ -493,7 +483,7 @@ public class Sketch extends PApplet {
         }
         // If note is caught make note false, and add to score, combo, and health count
         if (noteValuesOne[1][i] >= 670 && noteValuesOne[1][i] <= 720 && 
-        noteValuesOne[0][i]  > intBowlX && noteValuesOne[0][i] < (intBowlX + 300) && noteShownOne[i] == true){
+        noteValuesOne[0][i]  > intBowlX && noteValuesOne[0][i] < (intBowlX + 260) && noteShownOne[i] == true){
           noteShownOne[i] = false;
           jack.trigger();
           intCombo += 1;
@@ -506,6 +496,7 @@ public class Sketch extends PApplet {
         }
         // If note is missed reset combo and minus health
         if (noteValuesOne[1][i] >= 720 && noteValuesOne[1][i] <= 730 && noteShownOne[i] == true){
+          missSound.trigger();
           intCombo = 0;
           fltNotesMissed ++;
           noteShownOne[i] = false;
@@ -571,6 +562,7 @@ public class Sketch extends PApplet {
         }
         // If note is missed reset combo and minus health
         if (noteValuesTwo[1][i] >= 720 && noteValuesTwo[1][i] <= 730 && noteShownTwo[i] == true){
+          missSound.trigger();
           intCombo = 0;
           fltNotesMissed ++;
           noteShownTwo[i] = false;
@@ -624,7 +616,7 @@ public class Sketch extends PApplet {
         }
         // If note is caught make note false, and add to score, combo, and health count
         if (noteValuesThree[1][i] >= 670 && noteValuesThree[1][i] <= 720 && 
-        noteValuesThree[0][i]  > intBowlX && noteValuesThree[0][i] < (intBowlX + 300) && noteShownThree[i] == true){
+        noteValuesThree[0][i]  > intBowlX && noteValuesThree[0][i] < (intBowlX + 260) && noteShownThree[i] == true){
           noteShownThree[i] = false;
           jack.trigger();
           intCombo += 1;
@@ -637,6 +629,7 @@ public class Sketch extends PApplet {
         }
         // If note is missed reset combo and minus health
         if (noteValuesThree[1][i] >= 720 && noteValuesThree[1][i] <= 730 && noteShownThree[i] == true){
+          missSound.trigger();
           intCombo = 0;
           fltNotesMissed ++;
           noteShownThree[i] = false;
@@ -661,7 +654,7 @@ public class Sketch extends PApplet {
    */
   public void mousePressed(){
 
-    // Song Selection from Menu
+    // Buttons for Song Selection from Menu
     if (mouseX >= 460 && mouseX <= 820 && mouseY >= 285 && mouseY <= 335 && boolMenu == true){
       boolSongOne = true;
       resetSongValues();
@@ -677,7 +670,7 @@ public class Sketch extends PApplet {
       resetSongValues();
       symbal.trigger();
     }
-    // Returning to Menu from Result Screen
+    // Buttons for Returning to Menu from Result Screen
     if (mouseX >= 505 && mouseX <= 765 && mouseY >= 615 && mouseY <= 665 && boolResultScreen){
       boolResultScreen = false;
       boolResultOne = false;
@@ -687,10 +680,10 @@ public class Sketch extends PApplet {
       resetGameValues();
       applause.pause();
       intro = audio.loadFile("introSong.mp3", 2048);
-      applause = minim.loadFile("applauseSound.mp3");
+      applause = audio.loadFile("applauseSound.mp3");
       symbal.trigger();
     }
-    // Returning to Menu From Pause Screen
+    // Buttons for returning to Menu From Pause Screen
     if (mouseX >= 465 && mouseX <= 825 && mouseY >= 540 && mouseY <= 590 && boolPaused){
       boolMenu = true;
       boolSongOne = false;
@@ -702,21 +695,20 @@ public class Sketch extends PApplet {
       symbal.trigger();
     }
 
-    // Resume song level From Pause Screen
-
+    // Buttons for Resuming song level From Pause Screen
     if (mouseX >= 465 && mouseX <= 825 && mouseY >= 125 && mouseY <= 205 && boolPaused){
       boolPaused = false;
       symbal.trigger();
 
     } 
-    // Retry Song level from pause screen
+    // Button to retry Song level from pause screen
     if (mouseX >= 465 && mouseX <= 825 && mouseY >= 340 && mouseY <= 390 && boolPaused){
       resetSongValues();
       resetGameValues();
       boolPaused = false;
       symbal.trigger();
     }
-    // Return to menu from fail screen
+    // Button to return to menu from fail screen
     if (mouseX >= 465 && mouseX <= 825 && mouseY >= 540 && mouseY <= 590 && boolFailed){
       boolMenu = true;
       boolSongOne = false;
@@ -728,7 +720,7 @@ public class Sketch extends PApplet {
       symbal.trigger();
     }
 
-    // return to Menu from Fail Screen
+    // Button to return to Menu from Fail Screen
     if (mouseX >= 465 && mouseX <= 825 && mouseY >= 340 && mouseY <= 390 && boolFailed){
       resetSongValues();
       resetGameValues();
@@ -748,7 +740,6 @@ public class Sketch extends PApplet {
     if (key == 'd' && (intBowlX + 230 <= width)){
       boolBowlRight = true;
     }
-
     if (key == ' '){
       boolBowlSpeedUp = true;
     }
