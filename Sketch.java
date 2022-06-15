@@ -4,7 +4,7 @@ import processing.core.PImage;
 import ddf.minim.*;
 
 /**
- * A program that allows two users to play a game of Pong
+ * A rhythm game where the user catches the notes in the form of circles to a song. 
  * @author: G. Ge
  */
 
@@ -94,9 +94,11 @@ public class Sketch extends PApplet {
   boolean boolResultThree = false;
   boolean boolScoreCounting = false;
   boolean boolPaused = false;
+
+  boolean boolSongValuesTransfer;
   
   /**
-   * 
+   * A method that has contains the original settings of the program
    */
 
   public void settings() {
@@ -105,7 +107,7 @@ public class Sketch extends PApplet {
   }
 
   /** 
-   * 
+   * Method that sets the initial values of framerate, font, audio files, and intializes arrays, songs and images.
    */
 
   public void setup() {
@@ -119,12 +121,11 @@ public class Sketch extends PApplet {
 
     // Initiate Audio
     audio = new Minim(this);
-    minim = new Minim(this);
     
     // Set Framerate
     frameRate(60);
 
-    // Intialize Arrays 
+    // Intialize Arrays for song values
     for (int x = 0; x < noteShownOne.length; x++){
       noteShownOne[x] = false;
     }
@@ -170,10 +171,10 @@ public class Sketch extends PApplet {
     songAudioOne = audio.loadFile("audio.mp3");
     songAudioTwo = audio.loadFile("audio2.mp3");
     songAudioThree = audio.loadFile("Freeze.mp3");
-    applause = minim.loadFile("applauseSound.mp3");
+    applause = audio.loadFile("applauseSound.mp3");
     jack = audio.loadSample("soft-hitnormal2.wav");
     symbal = audio.loadSample("drum-hitwhistle.wav");
-    intro = audio.loadFile("introSong.mp3", 2048);
+    intro = audio.loadFile("introSong.mp3");
     
   }
 
@@ -184,12 +185,12 @@ public class Sketch extends PApplet {
   public void draw() {
     
     // Menu Screen
-    if (boolMenu == true){
-      boolMenu();
+    if (boolMenu ){
+      menu();
     }
 
     // Song Level One
-    if (boolSongOne == true){
+    if (boolSongOne){
       intro.pause();
       boolMenu = false;
       boolSongOne();
@@ -203,7 +204,7 @@ public class Sketch extends PApplet {
     }
 
     // Song Level two
-    if (boolSongTwo == true){
+    if (boolSongTwo){
       intro.pause();
       boolMenu = false;
       boolSongTwo();
@@ -217,7 +218,7 @@ public class Sketch extends PApplet {
     }
 
     // Song Level Three
-    if (boolSongThree == true){
+    if (boolSongThree){
       intro.pause();
       boolMenu = false;
       boolSongThree();
@@ -231,7 +232,7 @@ public class Sketch extends PApplet {
     }
     
     // Result Screen
-    if (boolResultOne == true || boolResultTwo == true || boolResultThree == true || boolResultScreen == true){
+    if (boolResultOne  || boolResultTwo  || boolResultThree  || boolResultScreen ){
       Results();
     }
 
@@ -239,7 +240,7 @@ public class Sketch extends PApplet {
     if (boolFailed || boolPaused){
       boolScoreCounting = false;
     }
-    else if (boolSongOne == true || boolSongTwo == true || boolSongThree == true){
+    else if (boolSongOne || boolSongTwo || boolSongThree){
       boolScoreCounting = true;
     }
     else {
@@ -250,7 +251,12 @@ public class Sketch extends PApplet {
     }
   }
 
-  public void boolMenu() {
+  /**
+   * Menu screen allowing the player to choose the song they want to play
+   * 
+   */
+
+  public void menu() {
 
     // Play Intro Song
     intro.play();
@@ -272,8 +278,11 @@ public class Sketch extends PApplet {
     text("Made in Love - Easy", 640,300);
     text("Renatus - Medium", 640,430);
     text("Everything Will Freeze - Hard", 640,560);
-
   }
+
+  /**
+   * Result screen after the player is finished with the song level, outputs the score, rank, and accuracy
+   */
   public void Results(){
     
     // Play Applause
@@ -327,6 +336,9 @@ public class Sketch extends PApplet {
     text("Menu", 640, 630);
   }
 
+  /**
+   * Failscreen if the player fails the level, allows the user to retry the song or return to main menu
+   */
   public void failScreen(){
     // Pause all songs currently playing
     songAudioOne.pause();
@@ -350,7 +362,11 @@ public class Sketch extends PApplet {
     text("Retry" , 640, 355);
     text("Menu" , 640, 555);
   }
-    
+  
+  /**
+   * A method which controls the Bowls movement
+   * 
+   */
   public void bowl() {
     
     // Bowl Movement
@@ -366,13 +382,15 @@ public class Sketch extends PApplet {
       if (boolBowlLeft && intBowlX >=0) {
         intBowlX -= intBowlSpeed;
       }
-
       if (boolBowlRight && (intBowlX + 260 <= width)){
         intBowlX += intBowlSpeed;
       }
     }
   }
 
+  /**
+   * Method which controls the pause menu
+   */
   public void pause() {
     
     // pause all songs
@@ -394,9 +412,11 @@ public class Sketch extends PApplet {
     text("Resume" , 640, 155);
     text("Retry" , 640, 355);
     text("Menu" , 640, 555);
-
-  
   }
+
+  /**
+   * A method which calculates and displayers the players progress, accuracy, score and health when playing a song
+   */
 
   public void scoring() {
 
@@ -434,6 +454,12 @@ public class Sketch extends PApplet {
     text("Accuracy: " + fltRoundAccuracy + "%", 150, 25);
   }
 
+  /**
+   * A method which plays and controls the first song level drawing the background, dropping the notes on beat, and 
+   * calculating health and accuracy
+   * 
+   */
+
   public void boolSongOne() {
 
     // Song Image
@@ -443,14 +469,19 @@ public class Sketch extends PApplet {
     if (boolPaused == false && boolFailed == false){
       songAudioOne.play();
     }
+   
+
     
+
     // Evaluate Current Position
     songPosition = songAudioOne.position();
 
     // If not failed or paused start game mechanics
     if (boolPaused == false && boolFailed == false){ 
+
       // For all notes within the song
-      for (int i = 0; i < noteValuesOne[0].length; i++){
+      for (int i = 0; i < (noteValuesOne)[0].length; i++){
+
         // If it is time to play the note, play the note
         if (songPosition >= (noteValuesOne[2][i] - 680) && songPosition <= (noteValuesOne[2][i])){
           noteShownOne[i] = true;
@@ -494,6 +525,12 @@ public class Sketch extends PApplet {
       boolFailed = true;
     }
   }
+
+  /**
+   * A method which plays and controls the second song level drawing the background, dropping the notes on beat, and 
+   * calculating health and accuracy
+   * 
+   */
   public void boolSongTwo() {
 
     // Song Image
@@ -552,6 +589,12 @@ public class Sketch extends PApplet {
       boolFailed = true;
     }
   }
+
+  /**
+   * A method which plays and controls the third song level drawing the background, dropping the notes on beat, and 
+   * calculating health and accuracy
+   * 
+   */
 
   public void boolSongThree() {
     
@@ -613,7 +656,9 @@ public class Sketch extends PApplet {
     }
   }
   
-
+  /**
+   * This method controls the buttons on all screens of the game
+   */
   public void mousePressed(){
 
     // Song Selection from Menu
@@ -692,6 +737,9 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * This method controls the bowl, and pausing and unpausing the game based on key input
+   */
   public void keyPressed() {
     // Bowl Movememnt
     if (key == 'a' && (intBowlX >= 0)){
@@ -714,6 +762,10 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * Method which controls the bowl movement
+   * 
+   */
   public void keyReleased() {
     // Bowl Movement
     if (key == 'a'){
@@ -726,8 +778,11 @@ public class Sketch extends PApplet {
       boolBowlSpeedUp = false;
     }
   }
-
-  public void resetGameValues(){
+  /**
+   * A method which resets all the game values
+   * 
+   */
+  public void resetGameValues() {
     fltRoundAccuracy = 0;
     fltAccuracy = 0;
     intScore = 0;
@@ -736,8 +791,12 @@ public class Sketch extends PApplet {
     fltNotesTotal = 0;
     intCombo = 0;
     intHealth = 500;
-
   }
+
+  /**
+   * A method which reloads the audio file for the song, and resets the y-values for the notes in each song
+   * 
+   */
   public void resetSongValues(){
     songAudioOne = audio.loadFile("audio.mp3");
     for (int i = 0; i < noteValuesOne[2].length; i++){
