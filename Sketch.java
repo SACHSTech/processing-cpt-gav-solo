@@ -8,16 +8,21 @@ import ddf.minim.*;
 public class Sketch extends PApplet {
 
   // PImage variable
-  PImage img;
+  PImage bowl;
+  PImage menuBackground;
+  PImage backgroundOne;
   PImage backgroundThree;
+  PImage backgroundTwo;
   PImage rankS;
   PImage rankA;
   PImage rankB;
   PImage rankC;
   PImage rankD;
+  PImage button;
 
   // Audio Varabiles
   Minim audio;
+  Minim minim;
   AudioPlayer player;
   AudioPlayer playerTwo;
   AudioPlayer playerThree;
@@ -25,6 +30,8 @@ public class Sketch extends PApplet {
   AudioSample drum;
   AudioSample symbal;
   AudioSample clap;
+  AudioPlayer applause;
+  AudioPlayer intro;
 
   // Font Varaible
   PFont gameFont;
@@ -32,11 +39,9 @@ public class Sketch extends PApplet {
   // Song 1 position variable
   float songPosition;
 
-
   // Bowl Varaibles
   int intBowlX = width/2;
   int intBowlSpeed = 10;
-
 
   // Movement variables
   boolean boolBowlLeft = false;
@@ -44,15 +49,17 @@ public class Sketch extends PApplet {
   boolean boolBowlSpeedUp = false;
 
   // Song 1 arrays
-  int[] dropObjectsY = new int[276];
-  int[][]dropObjectsXandYandTime = {{195,343,216,473,216,30,227,199,262,70,228,91,205,386,192,321,294,460,315,127,49,105,243,411,256,410,256,388,380,296,214,140,215,129,304,426,239,328,161,246,70,148,313,481,381,481,299,216,390,473,300,264,123,258,236,367,405,158,114,70,249,82,348,254,95,178,433,354,274,437,181,376,314,34,210,123,271,29,192,357,197,337,183,82,237,190,167,393,306,362,476,296,87,181,167,352,203,336,376,397,387,345,413,180,348,246,134,228,66,312,99,261,359,263,165,356,454,291,193,496,211,249,353,249,68,41,77,156,394,276,491,367,263,369,265,386,90,197,90,335,411,453,447,394,312,196,413,457,490,506,500,475,435,238,485,256,128,111,66,49,66,110,167,294,339,356,339,295,238,361,382,361,290,232,290,421,479,421,361,421,479,363,206,206,217,236,261,289,317,343,362,373,375,248,264,81,142,179,436,370,301,155,221,387,440,379,342,79,127,196,332,282,419,475,500,479,424,123,215,252,13,203,272,416,351,143,401,313,160,105,84,108,163,352,406,427,403,348,206,198,252,273,249,194,118,464,479,341,326,347,486,190,170,178,316,331,192,168,194,54,354,59,185,107,181,455,245,26,132,264,350,283,90,263,256,103}, dropObjectsY,
+  int[] noteYOne = new int[276];
+  int[][]noteValuesOne = {{195,343,216,473,216,30,227,199,262,70,228,91,205,386,192,321,294,460,315,127,49,105,243,411,256,410,256,388,380,296,214,140,215,129,304,426,239,328,161,246,70,148,313,481,381,481,299,216,390,473,300,264,123,258,236,367,405,158,114,70,249,82,348,254,95,178,433,354,274,437,181,376,314,34,210,123,271,29,192,357,197,337,183,82,237,190,167,393,306,362,476,296,87,181,167,352,203,336,376,397,387,345,413,180,348,246,134,228,66,312,99,261,359,263,165,356,454,291,193,496,211,249,353,249,68,41,77,156,394,276,491,367,263,369,265,386,90,197,90,335,411,453,447,394,312,196,413,457,490,506,500,475,435,238,485,256,128,111,66,49,66,110,167,294,339,356,339,295,238,361,382,361,290,232,290,421,479,421,361,421,479,363,206,206,217,236,261,289,317,343,362,373,375,248,264,81,142,179,436,370,301,155,221,387,440,379,342,79,127,196,332,282,419,475,500,479,424,123,215,252,13,203,272,416,351,143,401,313,160,105,84,108,163,352,406,427,403,348,206,198,252,273,249,194,118,464,479,341,326,347,486,190,170,178,316,331,192,168,194,54,354,59,185,107,181,455,245,26,132,264,350,283,90,263,256,103}, noteYOne,
   {3111,4133,5156,5838,7542,8565,10611,11292,12315,13679,14020,15042,16065,16747,17770,18792,19474,20838,21520,22201,22541,22882,23223,23565,24247,24929,25270,26974,28338,28679,28849,29020,29361,29531,29701,30042,30383,31065,31406,31747,32429,32940,33111,33963,34133,34304,34474,34645,34815,34986,35156,35838,36520,36861,37201,37883,38395,38565,38991,39076,39247,39588,39929,40440,40611,40951,41292,41804,41974,42315,42656,43338,43849,44020,44531,44701,45042,45383,45895,46236,46747,47770,48111,48537,48792,49474,54929,55951,56292,56633,56804,56974,57315,57656,58338,58679,59020,59361,59446,59531,59616,59701,60042,60213,60554,60724,61065,61406,61747,62258,62770,63111,63281,63622,63792,64133,64303,64644,64815,65156,65838,66349,66520,66861,67201,67371,67541,67712,67883,68224,68565,69076,69247,69588,69929,70270,70611,70951,71122,71292,71462,71632,71803,71973,72144,72315,72656,72741,72826,72911,72996,73082,73167,73338,73679,74361,79474,84929,85042,85156,85269,85383,85497,85611,85724,85838,85951,86065,86179,86292,86407,86520,86633,86748,86861,86974,87087,87202,87315,87429,87542,87656,88338,88394,88451,88508,88565,88622,88678,88735,88792,88849,88906,89020,89701,90383,90838,90895,91065,91520,91633,91747,92088,92429,93111,93566,93623,93792,94247,94361,94474,94815,95156,95269,95383,95496,95610,95838,96292,96349,96520,96974,97088,97201,97542,97883,98338,98451,98565,98678,98792,98905,99019,99247,99360,99474,99587,99701,99929,100270,100383,100497,100610,100724,100838,101292,101861,101974,102315,102656,102997,103338,103679,103906,104020,104588,104701,105042,105383,105724,106065,106747,107201,107429,107770,108111,108792,109474,112201,114929,117656,120383,122088,123111,124474,131292}};
-  boolean[] dropShown = new boolean[276];
+  boolean[] noteShownOne = new boolean[276];
 
+  // Scoring Varaibles
   int combo = 0; 
   int score; 
   double accuracy; 
-  int intAccuracy;
+  double roundAccuracy;
+  float songProgress;
 
   // Song 2 arrays 
   int [] notesYTwo = new int[737];
@@ -74,16 +81,20 @@ public class Sketch extends PApplet {
   double notesTotal;
   
   // Program state varaibles
-  boolean menu = false;
+  boolean menu = true;
   boolean songOne = false;
   boolean songTwo = false;
   boolean songThree = false;
-  boolean resultScreen = true;;
+  boolean resultScreen = false;
+  
    
   boolean resultOne = false;
   boolean resultTwo = false;
   boolean resultThree = false;
   boolean scoreCount = false;
+
+  boolean paused = false;
+  
   /**
    * 
    */
@@ -99,18 +110,21 @@ public class Sketch extends PApplet {
 
   public void setup() {
 
+    // Initial Font SEtup
     gameFont = createFont("Crispy Duck.ttf", 32);
     textFont(gameFont);
     textAlign(CENTER, CENTER);
+
     // Initiate Audio
     audio = new Minim(this);
+    minim = new Minim(this);
     
     // Set Framerate
     frameRate(60);
 
     // Intialize Arrays 
-    for (int x = 0; x < dropShown.length; x++){
-      dropShown[x] = false;
+    for (int x = 0; x < noteShownOne.length; x++){
+      noteShownOne[x] = false;
     }
     for (int j = 0; j < noteShownTwo.length; j++ ){
       noteShownTwo[j] = false;
@@ -118,28 +132,47 @@ public class Sketch extends PApplet {
     for (int a = 0; a < noteShownThree.length; a++){
       noteShownThree[a] = false;
     }
+    for (int x = 0; x < noteValuesOne[0].length; x++){
+      noteValuesOne[0][x] = (int)(noteValuesOne[0][x] * (float)1.75 + 100);
+    }
+    for (int x = 0; x < noteValuesTwo[0].length; x++){
+      noteValuesTwo[0][x] = (int)(noteValuesTwo[0][x] * (float)1.75 + 100);
+    }
+    for (int x = 0; x < noteValuesThree[0].length; x++){
+      noteValuesThree[0][x] = (int)(noteValuesThree[0][x] * (float)1.75 + 100);
+    }
 
-    // Load songs and images
-    img = loadImage("fruit-catcher-idle.png");
-    backgroundThree = loadImage("songThree.png");
+    // Load images
+    bowl = loadImage("fruit-catcher-idle.png");
+    menuBackground = loadImage("menuBackground.png");
+    backgroundOne = loadImage("backgroundOne.png");
+    backgroundTwo = loadImage("backgroundTwo.png");
+    backgroundThree = loadImage("backgroundThree.png");
     rankS = loadImage("ranking-s.png");
     rankA = loadImage("ranking-a.png");
     rankB = loadImage("ranking-b.png");
     rankC = loadImage("ranking-c.png");
+    button = loadImage("button.png");
+    button.resize(400, 80);
     rankS.resize(300,364);
     rankA.resize(300,364);
     rankB.resize(300,364);
     rankC.resize(300,364);
-
+    backgroundOne.resize(1280,720);
+    menuBackground.resize(1280,720);
+    bowl.resize(230,300);
 
     // load Songs
     player = audio.loadFile("audio.mp3");
     playerTwo = audio.loadFile("audio2.mp3");
     playerThree = audio.loadFile("Freeze.mp3");
+    applause = minim.loadFile("applauseSound.mp3");
     jack = audio.loadSample("soft-hitnormal2.wav");
     drum = audio.loadSample("drum-hitnormal.wav");
     symbal = audio.loadSample("drum-hitwhistle.wav");
     clap = audio.loadSample("drum-hitclap2.wav");
+    intro = audio.loadFile("introSong.mp3", 2048);
+    
   }
 
   /**
@@ -147,28 +180,38 @@ public class Sketch extends PApplet {
    */
 
   public void draw() {
-
+    
     if (menu == true){
       Menu();
+      
+      
     }
     if (songOne == true){
-      player.play();
+      intro.pause();
       menu = false;
       songOne();
       bowl();
+      if (paused){
+        pause();
+      }
     }
     if (songTwo == true){
-      playerTwo.play();
+      intro.pause();
       menu = false;
       songTwo();
       bowl();
+      if (paused){
+        pause();
+      }
     }
-    
     if (songThree == true){
-      playerThree.play();
+      intro.pause();
       menu = false;
       songThree();
       bowl();
+      if (paused){
+        pause();
+      }
     }
     if (resultOne == true || resultTwo == true || resultThree == true || resultScreen == true){
       Results();
@@ -187,34 +230,53 @@ public class Sketch extends PApplet {
   }
 
   public void Menu() {
-    background(0,0,0);
-    rect(500, 300, 300, 50);
-    rect(500, 450, 300, 50);
-    rect(500, 600, 300, 50);
+
+    intro.play();
+
+    // Background
+    image(menuBackground,0,0);
+
+    // Title 
+    fill(255,255,255);
+    textSize(100);
+    text("Catch The Notes!", 640, 150);
+    
+    button.resize(400, 80);
+    image(button, 440, 270);
+    image(button, 440, 400);
+    image(button, 440, 530);
+    textSize(30);
+    text("Made in Love - Easy", 640,300);
+    text("Renatus - Medium", 640,430);
+    text("Everything Will Freeze - Hard", 640,560);
 
   }
   public void Results(){
-    resultScreen = true;
-
+    
+    applause.play();
+    
     fill(0,0,0);
     rect(400, 0, 480, 720);
+    
     textSize(100);
     fill(255,255,255);
     
     text(score, 650, 350);
 
     textSize(50);
+    
     if (resultOne){
-      text("Made in Love", 650, 450);
+      text("Made in Love", 640, 450);
     }
     else if (resultTwo){
-      text("Renatus", 650, 450);
+      text("Renatus", 640, 450);
     }
     else if (resultThree){
-      text("Everything will Freeze", 650, 450);
+      text("Everything will Freeze", 640, 450);
     }
 
-    text(intAccuracy + "%", 650, 500);
+    double roundAccuracy = Math.round(accuracy * 100.0) / 100.0;
+    text("Accuracy: " + roundAccuracy + "%", 640, 500);
 
     if (accuracy >= 95){
       image(rankS, 500, -40);
@@ -225,178 +287,318 @@ public class Sketch extends PApplet {
     else if (accuracy >= 85){
       image(rankB, 500, -40);
     }
-    else if (accuracy >= 80){
+    else {
       image(rankC, 500, -40);
     }
-    rect(540, 640, 200, 50);
+
+    button.resize(300, 80);
+    textSize(30);
+    image(button, 485, 600 );
+    text("Menu", 640, 630);
   }
+    
 
   public void bowl() {
 
-    image(img, intBowlX, height - 50);
+    if (paused == false){
+      image(bowl, intBowlX, height - 50);
 
-    if (boolBowlSpeedUp){
-      intBowlSpeed = 30;
-    }
-    else {
-      intBowlSpeed = 15;
-    }
-    if (boolBowlLeft) {
-      intBowlX -= intBowlSpeed;
-    }
+      if (boolBowlSpeedUp){
+        intBowlSpeed = 30;
+      }
+      else {
+        intBowlSpeed = 15;
+      }
+      if (boolBowlLeft) {
+        intBowlX -= intBowlSpeed;
+      }
 
-    if (boolBowlRight){
-      intBowlX += intBowlSpeed;
+      if (boolBowlRight){
+        intBowlX += intBowlSpeed;
+      }
     }
+  }
+
+  public void pause() {
+    player.pause();
+    playerTwo.pause();
+    playerThree.pause();
+
+    rect(400, 0, 480, 720);
+
+    button.resize(400, 80);
+    
+    image(button, 445, 125);
+    image(button, 445, 325);
+    image(button, 445, 525);
+
+    textSize(30);
+    text("Resume" , 640, 155);
+    text("Retry" , 640, 355);
+    text("Menu" , 640, 555);
+
+  
   }
 
   public void scoring() {
-    text(combo, intBowlX + 130, 630);
-    text(score, 1000, 50);
+
+    if (songOne){
+      songProgress = songPosition / player.length();
+    }
+    if (songTwo){
+      songProgress = songPosition / playerTwo.length();
+    }
+    if (songThree) {
+      songProgress = songPosition / playerThree.length();
+    }
+
+    rect(360, 0, 500, 50);
+    fill(0,255,0);
+    rect(360, 0, songProgress * 500, 50);
+
+    fill(255, 255,255);
+    text(combo, intBowlX + 115, 630);
+    
+    text("score: " + score, 1100, 25);
     notesTotal = notesCaught + notesMissed;
+    
     accuracy = notesCaught / notesTotal * 100;
-
-    intAccuracy = (int)(accuracy);
-    text(intAccuracy, 100, 50);
-
+    double roundAccuracy = Math.round(accuracy * 100.0) / 100.0;
+    text("accuracy: " + roundAccuracy + "%", 100, 25);
   }
   public void songOne() {
 
-    image(backgroundThree, 0,0);
+    image(backgroundOne, 0,0);
+
     player.play();
+    
     songPosition = player.position();
 
-    for (int i = 0; i < dropObjectsXandYandTime[0].length; i++){
-      if (songPosition >= (dropObjectsXandYandTime[2][i] - 680) && songPosition <= (dropObjectsXandYandTime[2][i])){
-        dropShown[i] = true;
-      }
-      if (dropShown[i]){
-        ellipse(dropObjectsXandYandTime[0][i] * 2, dropObjectsXandYandTime[1][i] , 80, 80);
-        dropObjectsXandYandTime[1][i] += 15.111111111111;
-      }
-      if (dropObjectsXandYandTime[1][i] >= 670 && dropObjectsXandYandTime[1][i] <= 720 && 
-      dropObjectsXandYandTime[0][i] * 2 > intBowlX && dropObjectsXandYandTime[0][i] * 2 < (intBowlX + 305) && dropShown[i] == true){
-        dropShown[i] = false;
-        if (notesTotal % 2 == 0){
-          symbal.trigger();
+    if (paused == false){ 
+      for (int i = 0; i < noteValuesOne[0].length; i++){
+        if (songPosition >= (noteValuesOne[2][i] - 680) && songPosition <= (noteValuesOne[2][i])){
+          noteShownOne[i] = true;
         }
-        else{
+        if (noteShownOne[i]){
+          ellipse(noteValuesOne[0][i], noteValuesOne[1][i] , 80, 80);
+          noteValuesOne[1][i] += 15;
+        }
+        if (noteValuesOne[1][i] >= 670 && noteValuesOne[1][i] <= 720 && 
+        noteValuesOne[0][i]  > intBowlX && noteValuesOne[0][i] < (intBowlX + 230) && noteShownOne[i] == true){
+          noteShownOne[i] = false;
           jack.trigger();
-        } 
-        combo += 1;
-        score += 300 * (1 + combo * 0.01);
-        notesCaught ++;
+          combo += 1;
+          score += (1000000 / noteValuesOne[0].length);
+          notesCaught ++;
+        }
+        if (noteValuesOne[1][i] >= 720 && noteValuesOne[1][i] <= 730 && noteShownOne[i] == true){
+          combo = 0;
+          notesMissed ++;
+          noteShownOne[i] = false;
+        }
 
-      }
-      if (dropObjectsXandYandTime[1][i] >= 720 && dropObjectsXandYandTime[1][i] <= 730 && dropShown[i] == true){
-        combo = 0;
-        notesMissed ++;
-      }
     }
-    if (notesTotal == dropObjectsXandYandTime[0].length){
+    }
+    if (songPosition >= (player.length()-1000)){
       resultOne = true;
       songOne = false;
+      resultScreen = true;
     }
     
   }
   public void songTwo() {
 
-    image(backgroundThree, 0,0);
-
+    image(backgroundTwo, 0,0);
+    
     playerTwo.play();
     songPosition = playerTwo.position();
 
-    for (int i = 0; i < noteValuesTwo[0].length; i++){
-      if (songPosition >= (noteValuesTwo[2][i] - 680) && songPosition <= (noteValuesTwo[2][i])){
-        noteShownTwo[i] = true;
-      }
-      if (noteShownTwo[i]){
-        ellipse(noteValuesTwo[0][i] * (float)(1.75) + 100, noteValuesTwo[1][i] , 80, 80);
-        noteValuesTwo[1][i] += 15.111111111111;
-      }
-      if (noteValuesTwo[1][i] >= 670 && noteValuesTwo[1][i] <= 720 && 
-      noteValuesTwo[0][i] * 2 > intBowlX && noteValuesTwo[0][i] * 2 < (intBowlX + 305) && noteShownTwo[i] == true){
-        noteShownTwo[i] = false;
-        jack.trigger();
-        combo += 1;
-        score += 300 * (1 + combo * 0.01);
-        notesCaught ++;
-      }
-      if (noteValuesTwo[1][i] >= 720 && noteValuesTwo[1][i] <= 730 && noteShownTwo[i] == true){
-        combo = 0;
-        notesMissed ++;
+    if (paused == false){
+      for (int i = 0; i < noteValuesTwo[0].length; i++){
+        if (songPosition >= (noteValuesTwo[2][i] - 680) && songPosition <= (noteValuesTwo[2][i])){
+          noteShownTwo[i] = true;
+        }
+        if (noteShownTwo[i]){
+          ellipse(noteValuesTwo[0][i], noteValuesTwo[1][i] , 80, 80);
+          noteValuesTwo[1][i] += 15;
+        }
+        if (noteValuesTwo[1][i] >= 670 && noteValuesTwo[1][i] <= 720 && 
+        noteValuesTwo[0][i] > intBowlX && noteValuesTwo[0][i] < (intBowlX + 230) && noteShownTwo[i] == true){
+          noteShownTwo[i] = false;
+          jack.trigger();
+          combo += 1;
+          score += (1000000 / noteValuesTwo[0].length);
+          notesCaught ++;
+        }
+        if (noteValuesTwo[1][i] >= 720 && noteValuesTwo[1][i] <= 730 && noteShownTwo[i] == true){
+          combo = 0;
+          notesMissed ++;
+        }
       }
     }
-    if (notesTotal == noteValuesTwo[0].length){
+
+    
+    if (songPosition >= (playerTwo.length()-1000)){
       resultTwo = true;
       songTwo = false;
+      resultScreen = true;
     }
    
   }
   public void songThree() {
     
     image(backgroundThree, 0,0);
+    playerThree.play();
     
     songPosition = playerThree.position();
 
-    for (int i = 0; i < noteValuesThree[0].length; i++){
-      if (songPosition >= (noteValuesThree[2][i] - 680) && songPosition <= (noteValuesThree[2][i])){
-        noteShownThree[i] = true;
-      }
+    if (paused == false){
+      for (int i = 0; i < noteValuesThree[0].length; i++){
+        if (songPosition >= (noteValuesThree[2][i] - 680) && songPosition <= (noteValuesThree[2][i])){
+          noteShownThree[i] = true;
+        }
+  
+        if (noteShownThree[i]){
+          ellipse(noteValuesThree[0][i], noteValuesThree[1][i], 80, 80);
+          noteValuesThree[1][i] += 15;
+        }
+  
+        if (noteValuesThree[1][i] >= 670 && noteValuesThree[1][i] <= 720 && 
+        noteValuesThree[0][i] > intBowlX && noteValuesThree[0][i] < (intBowlX + 230) && noteShownThree[i] == true){
+          noteShownThree[i] = false;
+          jack.trigger();
+          combo += 1;
+          score += (1000000 / noteValuesThree[0].length);
+          notesCaught ++;
+        }
+        if (noteValuesThree[1][i] >= 720 && noteValuesThree[1][i] <= 730 && noteShownThree[i] == true){
+          combo = 0;
+          notesMissed ++;
+        }
 
-      if (noteShownThree[i]){
-        ellipse(noteValuesThree[0][i] * (float)(1.75) + 100, noteValuesThree[1][i] , 80, 80);
-        noteValuesThree[1][i] += 15.111111111111;
-      }
-
-      if (noteValuesThree[1][i] >= 670 && noteValuesThree[1][i] <= 720 && 
-      noteValuesThree[0][i] * 2 > intBowlX && noteValuesThree[0][i] * 2 < (intBowlX + 305) && noteShownThree[i] == true){
-        noteShownThree[i] = false;
-        
-        drum.trigger();
-        combo += 1;
-        score += 300 * (1 + combo * 0.01);
-        notesCaught ++;
-      }
-      if (noteValuesThree[1][i] >= 720 && noteValuesThree[1][i] <= 730 && noteShownThree[i] == true){
-        combo = 0;
-        notesMissed ++;
-      }
     }
-    if (notesTotal == noteValuesThree[0].length){
+  }
+    if (songPosition >= (playerThree.length()-1000)){
       songThree = false;
       resultThree = true;
-      
+      resultScreen = true;
     }
   }
   public void mousePressed(){
-    if (mouseX > 500 && mouseX < 800 && mouseY > 300 && mouseY < 350 && menu == true){
+    if (mouseX >= 460 && mouseX <= 820 && mouseY >= 285 && mouseY <= 335 && menu == true){
       songOne = true;
+      player = audio.loadFile("audio.mp3");
+      for (int i = 0; i < noteValuesOne[2].length; i++){
+        noteValuesOne[1][i] = 0;
+        noteShownOne[i] = false;
+      }
+      symbal.trigger();
+
     }
-    if (mouseX > 500 && mouseX < 800 && mouseY > 450 && mouseY < 500 && menu == true){
+    if (mouseX >= 460 && mouseX <= 820 && mouseY >= 415 && mouseY <= 465 && menu == true){
       songTwo = true;
+      playerTwo = audio.loadFile("audio2.mp3");
+      for (int i = 0; i < noteValuesTwo[1].length; i++){
+        noteValuesTwo[1][i] = 0;
+        noteShownTwo[i] = false;
+      }
+      symbal.trigger();
+
     }
-    if (mouseX > 500 && mouseX < 800 && mouseY > 600 && mouseY < 650 && menu == true){
+    if (mouseX >= 460 && mouseX <= 820 && mouseY >= 545 && mouseY <= 595 && menu == true){
       songThree = true;
+      playerThree = audio.loadFile("Freeze.mp3");
+      for (int i = 0; i < noteValuesThree[1].length; i++){
+        noteValuesThree[1][i] = 0;
+        noteShownThree[i] = false;
+      }
+      symbal.trigger();
+
     }
-    if (mouseX > 540 && mouseX < 740 && mouseY > 640 && mouseX < 690 && resultScreen ){
+    if (mouseX >= 505 && mouseX <= 765 && mouseY >= 615 && mouseY <= 665 && resultScreen){
       resultScreen = false;
       resultOne = false;
       resultTwo = false;
       resultThree = false;
       menu = true;
-      intAccuracy = 0;
+      roundAccuracy = 0;
       accuracy = 0;
       score = 0;
       notesCaught = 0;
       notesMissed = 0;
       notesTotal = 0;
       combo = 0;
+      intro = audio.loadFile("introSong.mp3", 2048);
+      applause = minim.loadFile("applauseSound.mp3");
+      symbal.trigger();
+
+    }
+    if (mouseX >= 465 && mouseX <= 825 && mouseY >= 540 && mouseY <= 590 && paused){
+      menu = true;
+      songOne = false;
+      songTwo = false;
+      songThree = false;
+      roundAccuracy = 0;
+      accuracy = 0;
+      score = 0;
+      notesCaught = 0;
+      notesMissed = 0;
+      notesTotal = 0;
+      combo = 0;
+      paused = false;
+      intro = audio.loadFile("introSong.mp3", 2048);
+      symbal.trigger();
+
+
+    }
+
+    if (mouseX >= 465 && mouseX <= 825 && mouseY >= 125 && mouseY <= 205 && paused){
+      paused = false;
+      symbal.trigger();
+
+      
+
+    } 
+    
+    if (mouseX >= 465 && mouseX <= 825 && mouseY >= 340 && mouseY <= 390 && paused){
+      player = audio.loadFile("audio.mp3");
+      for (int i = 0; i < noteValuesOne[2].length; i++){
+        noteValuesOne[1][i] = 0;
+        noteShownOne[i] = false;
+        
+      }
+      playerTwo = audio.loadFile("audio2.mp3");
+      for (int i = 0; i < noteValuesTwo[1].length; i++){
+        noteValuesTwo[1][i] = 0;
+        noteShownTwo[i] = false;
+      }
+      playerThree = audio.loadFile("Freeze.mp3");
+      for (int i = 0; i < noteValuesThree[1].length; i++){
+        noteValuesThree[1][i] = 0;
+        noteShownThree[i] = false;
+      }
+      roundAccuracy = 0;
+      accuracy = 0;
+      score = 0;
+      notesCaught = 0;
+      notesMissed = 0;
+      notesTotal = 0;
+      combo = 0;
+      paused = false;
+      symbal.trigger();
+
     }
   }
+
   public void keyPressed() {
     if (key == 'a'){
       boolBowlLeft = true;
+    }
+    if (key == 'p'){
+      paused = true;
+    }
+    if (key == 'o'){
+      paused = false;
     }
     if (key == 'd'){
       boolBowlRight = true;

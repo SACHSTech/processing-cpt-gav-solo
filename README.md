@@ -2,3 +2,5 @@
 # Program Title (edit this)
 
 Put your program description here.
+
+Goals: The goal of this program is to 
